@@ -31,3 +31,14 @@ console.log("===============")
 for(let i=5;i>0;i--){
     console.log("*".repeat(i));
 }
+
+const obj={
+  name : "홍길동",
+  age : 28,
+  job : "도적"
+}
+
+
+for(let key in obj){
+  console.log(`${key}->${obj[`key`]}`);
+}
