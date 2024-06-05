@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>jq-ajax</title>
+    <style>
+      .poster-img {
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="btnCallSnippet">HTML 조각 불러오기</button><br />
+    <button id="btnCallMovies">영화 목록 가져오기</button><br />
+
+    <div id="type-this"></div>
+    <div id="snippetVal"></div>
+    <div id="moviesVal">
+      <table id="list"></table>
+    </div>
+
+    <script src="script/jquery-3.7.1.js"></script>
+    <script>
+      const handleSnippetClick = async (evt) => {
+        // =========== ajax options ==========
+        $.ajax({
+          url: "snippet.html",
+          type: "GET",
+          dataType: "html",
+          success: (result) => {
+            $("#type-this").html(result);
+          },
+          error: (request, status, error) => {
+            console.error(error);
+          },
+        });
+
+        // =========== ajax done, fail ==========
+        $.ajax("snippet.html")
+          .done((data) => {
+            console.log(data);
+            $("#type-this").html(data);
+          })
+          .fail((jqXHR, status, error) => console.error(status, error));
+
+        // =========== fetch chain ==========
+        fetch("snippet.html")
+        .then(response => {
+          console.log(response);
+          return response.text();
+        })
+        .then(data => {
+          $("#type-this").html(data);
+        })
+        .catch(reason => {
+          console.error(reason);
+        });
+
+        // =========== async await ==========
+        try {
+          const response = await fetch("snippet.html");
+          const value = await response.text();
+          $("#type-this").html(value);
+
+        } catch (reason) {
+          console.error(reason);
+        }
+      };
+
+      const handleMoviesClick = (evt) => {
+        $.ajax({
+          url: "https://api.sampleapis.com/movies/animation",
+          type: "GET",
+          dataType: "json",
+          success: (result) => renderMovies(result),
+        });
+
+    //     fetch("https://api.sampleapis.com/movies/animation")
+    //       .then((response) => response.json())
+    //       .then(renderMovies)
+    //       .catch((reason) => console.error(reason));
+    //   };
+
+    //   const renderMovies = (movies) => {
+    //     $(movies).each((i, e) => {
+    //       const movieRow = $("<tr>")
+    //         .append(
+    //           $("<td>").append(
+    //             $("<img>")
+    //               .attr("src", $(e).attr("posterURL"))
+    //               .css("width", "100px")
+    //           )
+    //         )
+    //         .append($("<td>").append($(e).attr("id")))
+    //         .append($("<td>").append($(e).attr("title")))
+    //         .on("click", (evt) => {
+    //           // 새창 열어 json 내용 출력
+    //           // let showDescWindow = window.open("", "_blank");
+    //           // showDescWindow.document.write($(e).attr("imdbId"));
+    //           // showDescWindow.document.close();
+    //           // showDescWindow.document.title = $(e).attr("title");
+
+    //           // imdb 이동
+    //           window.open(
+    //             `https://www.imdb.com/title/${$(e).attr("imdbId")}`,
+    //             "_blank"
+    //           );
+    //         });
+    //       $("#moviesVal #list").append(movieRow);
+    //     });
+    //   };
+
+    //   $("button#btnCallSnippet").on("click", handleSnippetClick);
+    //   $("button#btnCallMovies").on("click", handleMoviesClick);
+    // </script>
+  </body>
+</html>
